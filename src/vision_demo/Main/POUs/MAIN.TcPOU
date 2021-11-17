@@ -1,0 +1,42 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.9">
+  <POU Name="MAIN" Id="{e7b4249b-701a-41a5-9112-3c8ba79bc23a}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM MAIN
+VAR
+	
+	myImage : ITcVnImage;
+	myDisplayableImage   : ITcVnDisplayableImage;
+	point1 : TcVnPoint2_REAL := [100, 200];
+	point2 : TcVnPoint2_REAL := [400, 300];
+	points : ITcVnContainer;
+	resultingLine : TcVnVector4_LREAL;
+	hr : HRESULT;
+	aColorWhite : TcVnVector4_LREAL := [255, 255, 255];
+	aColorGreen : TcVnVector4_LREAL := [0, 175, 0];
+	aColorBlue : TcVnVector4_LREAL := [0, 0, 255];
+	aColorRed : TcVnVector4_LREAL := [255, 0, 0];
+	
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[hr := F_VN_CreateImageAndSetPixels(myImage,500,500,ETcVnElementType.TCVN_ET_USINT,3,aColorWhite,hr);
+
+hr := F_VN_DrawPoint(REAL_TO_UDINT(point1[0]),REAL_TO_UDINT(point1[1]),myImage,TCVN_DS_PLUS,aColorRed,hr);
+hr := F_VN_DrawPoint(REAL_TO_UDINT(point2[0]),REAL_TO_UDINT(point2[1]),myImage,TCVN_DS_PLUS,aColorBlue,hr);
+
+hr := F_VN_CreateContainer(points,ContainerType_Vector_TcVnPoint2_REAL,0,hr);
+
+hr := F_VN_InsertIntoContainer_TcVnPoint2_REAL(point1,points,0,hr);
+hr := F_VN_InsertIntoContainer_TcVnPoint2_REAL(point2,points,0,hr);
+
+hr := F_VN_FitLine(points,resultingLine,hr);
+hr := F_VN_DrawLine_TcVnVector4_LREAL(resultingLine, myImage, aColorGreen, 1, hr);
+
+hr := F_VN_TransformIntoDisplayableImage(myImage, myDisplayableImage, S_OK);]]></ST>
+    </Implementation>
+    <LineIds Name="MAIN">
+      <LineId Id="158" Count="12" />
+      <LineId Id="25" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>
